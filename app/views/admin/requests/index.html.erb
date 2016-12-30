@@ -1,0 +1,49 @@
+<% provide :title, "Manage Request" %>
+
+<table class="table table-hover table-striped">
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>User_Id</th>
+      <th>Book_Id</th>
+      <th>Start date</th>
+      <th>Due date</th>
+      <th>Status</th>
+      <th>Accept</th>
+      <th>Reject</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @requests.present? %>
+      <% @requests.each_with_index do |r, index| %>
+        <tr>
+          <td>
+            <% params[:page] ||= "1" %>
+            <%= get_index params[:page], index, 5 %>
+          </td>
+          <td><%= r.User_Id %></td>
+          <td><%= r.Book_Id %></td>
+          <td><%= r.created_at %></td>
+          <td><%= r.Deadline %></td>
+          <td><%= r.Status %></td>
+          <td>
+            <%= form_for [:admin, r], method: :patch do |f| %>
+              <%= f.hidden_field :status, value: "accept"  %>
+              <%= f.submit "accept", class: "btn btn-primary", data: {confirm: "Sure?"} %>
+            <% end %>
+          </td>
+          <td>
+            <%= form_for [:admin, r], method: :patch do |f| %>
+              <%= f.hidden_field :status, value: "reject"  %>
+              <%= f.submit "reject", class: "btn btn-danger", data: {confirm: "Sure?"} %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr style="text-align: center;"><td colspan="8">No data</td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate %>
